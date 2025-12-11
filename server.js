@@ -1,35 +1,32 @@
-import express from "express";
-import { v4 as uuidv4 } from "uuid"; // pour générer des jobId uniques
-
+const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
-const NUM_SERVERS = 6; // nombre de serveurs générés
-const MIN_MONEY = 30; // 30M/s ou plus
 
-// Fonction pour générer un serveur aléatoire
-function generateServer() {
-  const money = (Math.random() * 50 + MIN_MONEY).toFixed(1); // 30 à 80 M/s
-  const players = `${Math.floor(Math.random() * 6) + 2}/8`; // 2 à 7 /8
-  return {
-    name: "Server " + Math.floor(Math.random() * 1000),
-    money: money + "M/s",
-    players: players,
-    jobId: uuidv4(),
-    timestamp: Date.now(),
-    createdAt: Date.now()
-  };
+function randomId() {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
 
-// Endpoint /live
-app.get("/live", (req, res) => {
-  const servers = [];
-  for (let i = 0; i < NUM_SERVERS; i++) {
-    servers.push(generateServer());
-  }
-  res.json({ pets: servers });
+function randomServer() {
+    const names = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Frost", "Shadow", "Blaze"];
+
+    return {
+        name: names[Math.floor(Math.random() * names.length)] + " " + Math.floor(Math.random() * 999),
+        money: (30 + Math.floor(Math.random() * 31)) + "M/s", // entre 30 et 60M/s
+        players: Math.floor(Math.random() * 8) + "/8",
+        jobId: randomId()
+    };
+}
+
+app.get("/servers", (req, res) => {
+    const list = [];
+
+    for (let i = 0; i < 4; i++) {
+        list.push(randomServer());
+    }
+
+    res.json({ pets: list });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 API GENERATIVE ONLINE on port ${PORT}`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log("API Started on port " + port);
 });
