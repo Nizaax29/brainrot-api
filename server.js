@@ -1,32 +1,45 @@
+// --- API Brainrot 30M/s+ ---
+// Version stable Railway (NE CRASH JAMAIS)
+
 const express = require("express");
 const app = express();
 
 function randomId() {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+    return (
+        Math.random().toString(36).substring(2) +
+        Math.random().toString(36).substring(2)
+    );
 }
 
 function randomServer() {
     const names = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Frost", "Shadow", "Blaze"];
 
+    const moneyValue = 30 + Math.floor(Math.random() * 31); // 30 à 60
+
     return {
         name: names[Math.floor(Math.random() * names.length)] + " " + Math.floor(Math.random() * 999),
-        money: (30 + Math.floor(Math.random() * 31)) + "M/s", // entre 30 et 60M/s
-        players: Math.floor(Math.random() * 8) + "/8",
+        money: moneyValue + "M/s",
+        moneyValue: moneyValue,
+        players: Math.floor(Math.random() * 9) + "/8", // parfois full
         jobId: randomId()
     };
 }
 
 app.get("/servers", (req, res) => {
-    const list = [];
+    try {
+        const list = [];
 
-    for (let i = 0; i < 4; i++) {
-        list.push(randomServer());
+        for (let i = 0; i < 5; i++) {
+            list.push(randomServer());
+        }
+
+        res.json({ servers: list });
+    } catch (err) {
+        res.json({ error: "API ERROR", details: err.toString() });
     }
-
-    res.json({ pets: list });
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log("API Started on port " + port);
+    console.log("Brainrot API Running on port " + port);
 });
