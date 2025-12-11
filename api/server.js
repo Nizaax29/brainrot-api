@@ -44,3 +44,16 @@ app.get("/live", (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`🚀 API en ligne sur http://localhost:${PORT}/live`));
+
+
+
+import express from "express";
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get("/live", (req, res) => {
+  res.json({ pets: [] }); // JSON vide pour test
+});
+
+app.listen(PORT, () => console.log(`🚀 API en ligne sur port ${PORT}`));
