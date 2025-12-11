@@ -12,5 +12,5 @@ app.get("/live", (req, res) => {
 
 // Démarrage du serveur
 app.listen(PORT, () => {
-  console.log(`🚀 API en ligne sur le port ${PORT}`);
+  console.log(`🚀 API en ligne sur le port ${8080}`);
 });
