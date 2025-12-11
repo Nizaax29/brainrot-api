@@ -1,29 +1,35 @@
 import express from "express";
+import { v4 as uuidv4 } from "uuid"; // pour générer des jobId uniques
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const NUM_SERVERS = 6; // nombre de serveurs générés
 const MIN_MONEY = 30; // 30M/s ou plus
 
-// JSON final avec uniquement les serveurs >=30M/s
-const serversData = {
-  "pets":[
-    {"name":"Esok Sekolah","money":"30M/s","players":"8/8","jobId":"2e0edc96-3792-4183-b625-3dee5fa38ace"},
-    {"name":"67","money":"37.5M/s","players":"6/8","jobId":"2e0edc96-3792-4183-b625-3dee5fa38ace"},
-    {"name":"Los Burritos","money":"51M/s","players":"6/8","jobId":"b2a163df-2d01-45ec-948d-0a9e60c4040b"},
-    {"name":"67","money":"52.5M/s","players":"6/8","jobId":"b2a163df-2d01-45ec-948d-0a9e60c4040b"}
-  ]
-};
+// Fonction pour générer un serveur aléatoire
+function generateServer() {
+  const money = (Math.random() * 50 + MIN_MONEY).toFixed(1); // 30 à 80 M/s
+  const players = `${Math.floor(Math.random()*6)+2}/${8}`; // 2 à 7 /8
+  return {
+    name: "Server "..Math.floor(Math.random()*1000),
+    money: `${money}M/s`,
+    players: players,
+    jobId: uuidv4(),
+    timestamp: Date.now(),
+    createdAt: Date.now()
+  };
+}
 
 // Endpoint /live
 app.get("/live", (req, res) => {
-  let filtered = serversData.pets.filter(s => {
-    let money = parseFloat(s.money.replace("M/s",""));
-    return money >= MIN_MONEY;
-  });
-  res.json({ pets: filtered });
+  const servers = [];
+  for (let i=0; i<NUM_SERVERS; i++) {
+    servers.push(generateServer());
+  }
+  res.json({ pets: servers });
 });
 
-// Démarrage serveur
+// Start server
 app.listen(PORT, () => {
-  console.log(`🚀 API FINAL ONLINE on port ${PORT}`);
+  console.log(`🚀 API GENERATIVE ONLINE on port ${8080}`);
 });
